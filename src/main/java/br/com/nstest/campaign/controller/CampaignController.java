@@ -1,0 +1,101 @@
+package br.com.nstest.campaign.controller;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.nstest.campaign.entity.Campaign;
+import br.com.nstest.campaign.repository.CampaignRepository;
+
+@RestController
+@RequestMapping("campaign")
+public class CampaignController {
+	
+	@Autowired
+	private CampaignRepository repository;
+	
+	@GetMapping
+	public ResponseEntity<Campaign> read(@RequestParam Integer campaignId) {
+		if(Objects.nonNull(campaignId)) {
+			try {
+				Optional<Campaign> campaign = repository.findById(campaignId);
+				if(campaign.isPresent() && campaign.get().getValidityFinalDate().isBefore(LocalDate.now()))
+					return new ResponseEntity<Campaign>(repository.findById(campaignId).get(), HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping
+	public ResponseEntity<Campaign> create(@RequestBody Campaign campaign) {
+		if(Objects.nonNull(campaign) && Objects.isNull(campaign.getId())) {
+			try {
+				List<Campaign> campaignList = repository.findByValidityFinalDateBetween(campaign.getValidityInitDate(), campaign.getValidityFinalDate());
+				if(!CollectionUtils.isEmpty(campaignList)) {
+					campaignList.forEach(c -> c.setValidityFinalDate(c.getValidityFinalDate().plusDays(1)));
+					campaignList.add(campaign);
+					
+					List<Campaign> teste = campaignList.stream().collect(Collectors.groupingBy(Function.identity(),
+			                Collectors.counting()))
+			                .entrySet().stream()
+			                .filter(e -> e.getValue() > 1L)
+			                .map(e -> e.getKey())
+			                .collect(Collectors.toList());
+					teste.clear();
+					//					repository.save(campaign);
+	//				repository.saveAll(campaignList);
+					
+				} else return new ResponseEntity<Campaign>(repository.save(campaign), HttpStatus.CREATED);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PutMapping
+	public ResponseEntity<Campaign> update(@RequestBody Campaign campaign) {
+		if(Objects.nonNull(campaign) && Objects.nonNull(campaign.getId())) {
+			try {
+				return new ResponseEntity<Campaign>(repository.save(campaign), HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<Void> delete(@RequestParam Integer campaignId) {
+		if(Objects.nonNull(campaignId)) {
+			try {
+				repository.deleteById(campaignId);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+}
