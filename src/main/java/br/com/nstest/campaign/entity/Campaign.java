@@ -6,8 +6,8 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -19,11 +19,12 @@ public class Campaign implements Serializable {
 	@Id
 	private Integer id;
 	
+	@ManyToOne
+	@JoinColumn(name = "ID_TEAM")
+	private HeartTeam heartTeam;
+
 	@Column
 	private String name;
-	
-	@Column
-	private Integer heartTeamId;
 	
 	@Column
 	@JsonFormat(pattern="yyyy-MM-dd")
@@ -49,12 +50,12 @@ public class Campaign implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getHeartTeamId() {
-		return heartTeamId;
+	public HeartTeam getHeartTeam() {
+		return heartTeam;
 	}
 
-	public void setHeartTeamId(Integer heartTeamId) {
-		this.heartTeamId = heartTeamId;
+	public void setHeartTeamId(HeartTeam heartTeam) {
+		this.heartTeam = heartTeam;
 	}
 
 	public LocalDate getValidityInitDate() {

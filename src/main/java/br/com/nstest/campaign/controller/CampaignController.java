@@ -1,12 +1,9 @@
 package br.com.nstest.campaign.controller;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,16 +52,16 @@ public class CampaignController {
 					campaignList.forEach(c -> c.setValidityFinalDate(c.getValidityFinalDate().plusDays(1)));
 					campaignList.add(campaign);
 					
-					List<Campaign> teste = campaignList.stream().collect(Collectors.groupingBy(Function.identity(),
-			                Collectors.counting()))
-			                .entrySet().stream()
-			                .filter(e -> e.getValue() > 1L)
-			                .map(e -> e.getKey())
-			                .collect(Collectors.toList());
-					teste.clear();
-					//					repository.save(campaign);
-	//				repository.saveAll(campaignList);
+					while(campaignList.stream().map(Campaign::getValidityFinalDate).distinct().count() != campaignList.size()) {
+						campaignList.forEach(c -> {
+							if(campaignList.stream().filter(ca -> c.getValidityFinalDate().isEqual(ca.getValidityFinalDate())).count() > 1 && Objects.nonNull(c.getId())) {
+								c.setValidityFinalDate(c.getValidityFinalDate().plusDays(1));
+							}
+						});
+					}
 					
+					List<Campaign> campaignSaveResponse = repository.saveAll(campaignList);
+					return new ResponseEntity<Campaign>(campaignSaveResponse.get(campaignSaveResponse.size()), HttpStatus.CREATED);
 				} else return new ResponseEntity<Campaign>(repository.save(campaign), HttpStatus.CREATED);
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

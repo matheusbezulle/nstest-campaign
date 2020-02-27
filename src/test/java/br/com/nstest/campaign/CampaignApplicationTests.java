@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.nstest.campaign.controller.CampaignController;
 import br.com.nstest.campaign.entity.Campaign;
+import br.com.nstest.campaign.entity.HeartTeam;
 import br.com.nstest.campaign.repository.CampaignRepository;
 
 @SpringBootTest
@@ -28,27 +29,30 @@ class CampaignApplicationTests {
 	@Test
 	void contextLoads() {
 		
+		HeartTeam ht = new HeartTeam();
+		ht.setId(1);
+		
 		Campaign campaign1 = new Campaign();
 		campaign1.setName("campanha 1");
 		campaign1.setValidityInitDate(LocalDate.of(2020, 3, 1));
 		campaign1.setValidityFinalDate(LocalDate.of(2020, 3, 3));
-		campaign1.setHeartTeamId(1);
+		campaign1.setHeartTeamId(ht);
 		
 		Campaign campaign2 = new Campaign();
 		campaign2.setName("campanha 2");
 		campaign2.setValidityInitDate(LocalDate.of(2020, 3, 1));
 		campaign2.setValidityFinalDate(LocalDate.of(2020, 3, 2));
-		campaign2.setHeartTeamId(1);
+		campaign2.setHeartTeamId(ht);
 		
 		List<Campaign> campaignList = new ArrayList<>();
 		campaignList.add(campaign1);
 		campaignList.add(campaign2);
 		
 		Campaign campaign3 = new Campaign();
-		campaign3.setName("campanha 1");
+		campaign3.setName("campanha 3");
 		campaign3.setValidityInitDate(LocalDate.of(2020, 3, 1));
 		campaign3.setValidityFinalDate(LocalDate.of(2020, 3, 3));
-		campaign3.setHeartTeamId(1);
+		campaign3.setHeartTeamId(ht);
 		
 		when(repository.findByValidityFinalDateBetween(any(LocalDate.class), any(LocalDate.class))).thenReturn(campaignList);
 		
