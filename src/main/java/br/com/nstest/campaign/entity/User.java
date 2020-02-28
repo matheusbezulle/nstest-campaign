@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -17,8 +19,9 @@ public class User implements Serializable {
 	@Id
 	private Integer userId;
 	
-	@Column
-	private Integer heartTeamId;
+	@ManyToOne
+	@JoinColumn(name = "ID_HEART_TEAM")
+	private HeartTeam heartTeam;
 	
 	@Column
 	private String name;
@@ -62,12 +65,12 @@ public class User implements Serializable {
 		this.birthday = birthday;
 	}
 
-	public Integer getHeartTeamId() {
-		return heartTeamId;
+	public HeartTeam getHeartTeam() {
+		return heartTeam;
 	}
 
-	public void setHeartTeamId(Integer heartTeamId) {
-		this.heartTeamId = heartTeamId;
+	public void setHeartTeam(HeartTeam heartTeam) {
+		this.heartTeam = heartTeam;
 	}
 	
 }

@@ -5,20 +5,28 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@SequenceGenerator(name = "SQ_CAMPAIGN", sequenceName = "SEQ_CAMPAIGN", allocationSize = 1)
 public class Campaign implements Serializable {
 	
 	private static final long serialVersionUID = 3699003352560701616L;
 
 	@Id
+	@GeneratedValue(generator = "SQ_CAMPAIGN", strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
-	@Column
-	private Integer heartTeamId;
+	@ManyToOne
+	@JoinColumn(name = "ID_HEART_TEAM")
+	private HeartTeam heartTeam;
 
 	@Column
 	private String name;
@@ -47,12 +55,12 @@ public class Campaign implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getHeartTeam() {
-		return heartTeamId;
+	public HeartTeam getHeartTeam() {
+		return heartTeam;
 	}
 
-	public void setHeartTeamId(Integer heartTeamId) {
-		this.heartTeamId = heartTeamId;
+	public void setHeartTeam(HeartTeam heartTeam) {
+		this.heartTeam = heartTeam;
 	}
 
 	public LocalDate getValidityInitDate() {

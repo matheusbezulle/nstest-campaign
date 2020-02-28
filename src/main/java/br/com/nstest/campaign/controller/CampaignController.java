@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nstest.campaign.dto.APIResponse;
 import br.com.nstest.campaign.entity.Campaign;
 import br.com.nstest.campaign.repository.CampaignRepository;
+import br.com.nstest.campaign.repository.HeartTeamRepository;
 
 @RestController
 @RequestMapping("campaign")
@@ -29,13 +29,16 @@ public class CampaignController {
 	@Autowired
 	private CampaignRepository repository;
 	
+	@Autowired
+	private HeartTeamRepository heartTeamRepository;
+	
 	@GetMapping
-	public ResponseEntity<APIResponse> read(@RequestParam Integer campaignId) {
+	public ResponseEntity<Campaign> read(@RequestParam Integer campaignId) {
 		if(Objects.nonNull(campaignId)) {
 			try {
 				Optional<Campaign> campaign = repository.findById(campaignId);
-				if(campaign.isPresent() && campaign.get().getValidityFinalDate().isBefore(LocalDate.now()))
-					return new ResponseEntity<APIResponse>(new APIResponse(Boolean.TRUE, null, repository.findById(campaignId).get()), HttpStatus.OK);
+				if(campaign.isPresent() && campaign.get().getValidityFinalDate().isAfter(LocalDate.now()))
+					return new ResponseEntity<Campaign>(repository.findById(campaignId).get(), HttpStatus.OK);
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -48,7 +51,8 @@ public class CampaignController {
 	public ResponseEntity<Campaign> create(@RequestBody Campaign campaign) {
 		if(Objects.nonNull(campaign) && Objects.isNull(campaign.getId())) {
 			try {
-				List<Campaign> campaignList = repository.findByValidityFinalDateBetween(campaign.getValidityInitDate(), campaign.getValidityFinalDate());
+				List<Campaign> campaignList = repository.findByValidityInitDateBetweenOrValidityFinalDateBetween(campaign.getValidityInitDate(), campaign.getValidityFinalDate());
+				
 				if(!CollectionUtils.isEmpty(campaignList)) {
 					campaignList.forEach(c -> c.setValidityFinalDate(c.getValidityFinalDate().plusDays(1)));
 					campaignList.add(campaign);
@@ -62,8 +66,11 @@ public class CampaignController {
 					}
 					
 					List<Campaign> campaignSaveResponse = repository.saveAll(campaignList);
-					return new ResponseEntity<Campaign>(campaignSaveResponse.get(campaignSaveResponse.size()), HttpStatus.CREATED);
-				} else return new ResponseEntity<Campaign>(repository.save(campaign), HttpStatus.CREATED);
+					return new ResponseEntity<Campaign>(campaignSaveResponse.get(campaignSaveResponse.size() - 1), HttpStatus.CREATED);
+				}
+				
+				heartTeamRepository.save(campaign.getHeartTeam());
+				return new ResponseEntity<Campaign>(repository.save(campaign), HttpStatus.CREATED);
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
