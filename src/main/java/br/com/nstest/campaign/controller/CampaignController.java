@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nstest.campaign.dto.APIResponse;
 import br.com.nstest.campaign.entity.Campaign;
 import br.com.nstest.campaign.repository.CampaignRepository;
 
@@ -29,12 +30,12 @@ public class CampaignController {
 	private CampaignRepository repository;
 	
 	@GetMapping
-	public ResponseEntity<Campaign> read(@RequestParam Integer campaignId) {
+	public ResponseEntity<APIResponse> read(@RequestParam Integer campaignId) {
 		if(Objects.nonNull(campaignId)) {
 			try {
 				Optional<Campaign> campaign = repository.findById(campaignId);
 				if(campaign.isPresent() && campaign.get().getValidityFinalDate().isBefore(LocalDate.now()))
-					return new ResponseEntity<Campaign>(repository.findById(campaignId).get(), HttpStatus.OK);
+					return new ResponseEntity<APIResponse>(new APIResponse(Boolean.TRUE, null, repository.findById(campaignId).get()), HttpStatus.OK);
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
