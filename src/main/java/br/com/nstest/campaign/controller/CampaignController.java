@@ -38,7 +38,7 @@ public class CampaignController {
 			try {
 				Optional<Campaign> campaign = repository.findById(campaignId);
 				if(campaign.isPresent() && campaign.get().getValidityFinalDate().isAfter(LocalDate.now()))
-					return new ResponseEntity<Campaign>(repository.findById(campaignId).get(), HttpStatus.OK);
+					return new ResponseEntity<Campaign>(campaign.get(), HttpStatus.OK);
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
