@@ -47,6 +47,18 @@ public class CampaignController {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
+	@GetMapping("findByHeartTeam")
+	public ResponseEntity<List<Campaign>> findByHeartTeam(@RequestParam Integer heartTeamId) {
+		if(Objects.nonNull(heartTeamId)) {
+			try {
+				return new ResponseEntity<List<Campaign>>(repository.findByHeartTeamId(heartTeamId), HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
 	@PostMapping
 	public ResponseEntity<Campaign> create(@RequestBody Campaign campaign) {
 		if(Objects.nonNull(campaign) && Objects.isNull(campaign.getId())) {

@@ -14,4 +14,6 @@ public interface CampaignRepository extends JpaRepository<Campaign, Integer> {
 	@Query(value = "SELECT c FROM Campaign c WHERE (c.validityInitDate BETWEEN :vid AND :vfd) OR (c.validityFinalDate BETWEEN :vid AND :vfd)")
 	List<Campaign> findByValidityInitDateBetweenOrValidityFinalDateBetween(@Param(value = "vid") LocalDate validityInitDate, @Param(value = "vfd") LocalDate validityFinalDate);
 	
+	List<Campaign> findByHeartTeamId(Integer id);
+	
 }
