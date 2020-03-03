@@ -153,6 +153,23 @@ class CampaignApplicationTests {
 	}
 	
 	@Test
+	void findByHeartTeamNullId() {
+		assertEquals(campaignController.findByHeartTeam(null).getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@Test
+	void findByHeartTeam() {
+		when(campaignRepository.findByHeartTeamId(anyInt())).thenReturn(new ArrayList<>());
+		assertEquals(campaignController.findByHeartTeam(1).getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	void findByHeartTeamErrorThrowException() {
+		doThrow(new IllegalArgumentException()).when(campaignRepository).findByHeartTeamId(anyInt());
+		assertEquals(campaignController.findByHeartTeam(1).getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@Test
 	void updateNullCampaign() {
 		assertEquals(campaignController.update(null).getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
