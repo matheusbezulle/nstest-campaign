@@ -211,7 +211,7 @@ class CampaignApplicationTests {
 		campaign.setId(1);
 		campaign.setName("Campaign 01");
 		campaign.setValidityInitDate(LocalDate.of(2020, 3, 1));
-		campaign.setValidityFinalDate(LocalDate.of(2020, 3, 3));
+		campaign.setValidityFinalDate(LocalDate.now().plusDays(1));
 		campaign.setHeartTeam(new HeartTeam(1));
 		return campaign;
 	}
