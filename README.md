@@ -106,7 +106,7 @@ Os parâmetros informados são inválidos.
 
 `[500] INTERNAL_SERVER_ERROR`<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
-
+<br/><br/>
 ### [PUT] /campaign<br/>
 Funcionalidade que atualiza os dados de determinada campanha com base nos dados informados no body.<br/>
 Request
@@ -141,7 +141,7 @@ Os parâmetros informados são inválidos.
 
 `[500] INTERNAL_SERVER_ERROR`<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
-
+<br/><br/>
 ### [DELETE] /campaign<br/>
 Funcionalidade que exclui determinada campanha de acordo com o id informado.<br/>
 Request via query string
