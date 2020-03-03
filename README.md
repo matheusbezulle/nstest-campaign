@@ -17,13 +17,13 @@ As associações de campanha/usuários são feitas através de uma terceira tabe
 
 ## Definição da aplicação
 
-[GET] /campaign
-Funcionalidade que busca determinada campanha de acordo com o id informado.
+`[GET] /campaign`<br/>
+Funcionalidade que busca determinada campanha de acordo com o id informado.<br/>
 Request via query string
 ```ruby
 /campaign?campaignId=<?>
 ```
-Response
+Response<br/>
 [200] OK
 ```ruby
 {
@@ -36,22 +36,22 @@ Response
     "validityFinalDate": "2020-03-03"
 }
 ```
-[204] NO_CONTENT
+[204] NO_CONTENT<br/>
 Não foi encontrada nenhuma campanha para os parâmetros informados.
 
-[400] BAD_REQUEST
+[400] BAD_REQUEST<br/>
 Os parâmetros informados são inválidos.
 
-[500] INTERNAL_SERVER_ERROR
+[500] INTERNAL_SERVER_ERROR<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
-
-[GET] /campaign/findByHeartTeam
-Funcionalidade que busca todas as campanhas associadas a determinado time do coração de acordo com o id informado.
+<br/><br/>
+`[GET] /campaign/findByHeartTeam`<br/>
+Funcionalidade que busca todas as campanhas associadas a determinado time do coração de acordo com o id informado.<br/>
 Request via query string
 ```ruby
 /campaign/findByHeartTeam?heartTeamId=<?>
 ```
-Response
+Response<br/>
 [200] OK
 ```ruby
 [
@@ -67,14 +67,14 @@ Response
 ]
 ```
 
-[400] BAD_REQUEST
+[400] BAD_REQUEST<br/>
 Os parâmetros informados são inválidos.
 
-[500] INTERNAL_SERVER_ERROR
+[500] INTERNAL_SERVER_ERROR<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
-
-[POST] /campaign
-Funcionalidade que cadastra determinada campanha com base nos dados informados no body.
+<br/><br/>
+[POST] /campaign<br/>
+Funcionalidade que cadastra determinada campanha com base nos dados informados no body.<br/>
 Request
 ```ruby
 {
@@ -101,14 +101,14 @@ Response
 }
 ```
 
-[400] BAD_REQUEST
+[400] BAD_REQUEST<br/>
 Os parâmetros informados são inválidos.
 
-[500] INTERNAL_SERVER_ERROR
+[500] INTERNAL_SERVER_ERROR<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
 
-[PUT] /campaign
-Funcionalidade que atualiza os dados de determinada campanha com base nos dados informados no body.
+`[PUT] /campaign`<br/>
+Funcionalidade que atualiza os dados de determinada campanha com base nos dados informados no body.<br/>
 Request
 ```ruby
 {
@@ -122,7 +122,7 @@ Request
 }
 ```
 
-Response
+Response<br/>
 [200] OK
 ```ruby
 {
@@ -136,24 +136,24 @@ Response
 }
 ```
 
-[400] BAD_REQUEST
+[400] BAD_REQUEST<br/>
 Os parâmetros informados são inválidos.
 
-[500] INTERNAL_SERVER_ERROR
+[500] INTERNAL_SERVER_ERROR<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
 
-[DELETE] /campaign
-Funcionalidade que exclui determinada campanha de acordo com o id informado.
+`[DELETE] /campaign`<br/>
+Funcionalidade que exclui determinada campanha de acordo com o id informado.<br/>
 Request via query string
 ```ruby
 /campaign?campaignId=<?>
 ```
-Response
-[200] OK
+Response<br/>
+[200] OK<br/>
 Campanha excluída com sucesso.
 
-[400] BAD_REQUEST
+[400] BAD_REQUEST<br/>
 Os parâmetros informados são inválidos.
 
-[500] INTERNAL_SERVER_ERROR
+[500] INTERNAL_SERVER_ERROR<br/>
 Ocorreu um erro na aplicação durante o processamento da requisição.
